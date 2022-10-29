@@ -62,13 +62,13 @@ function* logIn(action) {
 }
 
 /* ==========로그아웃============ */
-function logoutAPI() {
+function logOutAPI() {
   return axios.post('/user/logout');
 }
 
 function* logOut() {
   try {
-    yield call(logoutAPI);
+    yield call(logOutAPI);
     // yield delay(1000);
 
     yield put({

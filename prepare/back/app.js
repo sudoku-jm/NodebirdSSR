@@ -50,21 +50,17 @@ app.use('/images', express.static(path.join(__dirname,'uploads')));
 
 //front -> back으로보낼 때 json과 url인코디드로만 받고있다. 멀티파트데이터를 받을 수 없다.
 app.use(express.json());
-app.use(express.urlencoded({extended : true}));
-
-/* ====미들웨어 추가==== */
-
-//쿠키
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //세션
-app.use(session());
-app.use(passport.initialize());
 app.use(session({
   saveUninitialized: false,
   resave: false,
   secret: process.env.COOKIE_SECRET,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 

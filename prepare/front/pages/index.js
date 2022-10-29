@@ -8,11 +8,11 @@ import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 function Home() {
   const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user);
   const { logInDone } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state) => state.post);
   // 리트윗 에러 경고창
   useEffect(() => {
-    console.log('rerender');
     if (retweetError) {
       alert(retweetError);
     }
@@ -58,7 +58,7 @@ function Home() {
   return (
     <AppLayout>
       {/* 로그인 했을 때만 PostForm이 보인다. */}
-      {logInDone && <PostForm />}
+      {me && <PostForm />}
       {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
     </AppLayout>
   );

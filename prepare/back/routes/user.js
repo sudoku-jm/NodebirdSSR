@@ -110,15 +110,9 @@ router.post('/logout', isLoggedIn, (req, res) => {
     // res.status(200).send('ok');
     console.log('logout?!');
     //passport 0.6버전
-    req.logout((err) => {
-        req.logout(() => {});
-		req.session.destroy();
-		if (err) {
-			res.redirect("/");
-		} else {
-			res.status(200).json("server ok: 로그아웃 완료");
-		}
-	});
+    req.logout();
+    req.session.destroy();
+    res.status(200).json("server ok: 로그아웃 완료");
 });
 
 // 회원가입
