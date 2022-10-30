@@ -85,7 +85,7 @@ function* logOut() {
 
 /* ==========회원가입============ */
 
-function signUpAPI(data) {
+function signUpAPI(data) { // POST /user
   return axios.post('/user', data);
   /*
     data는 email, nickname, password라는 객체이다.

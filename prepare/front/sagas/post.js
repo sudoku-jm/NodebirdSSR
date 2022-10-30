@@ -75,7 +75,7 @@ function* loadPosts(action) {
 function addPostAPI(data) {
   // return axios.post('/post', { content: data });
   // formData는 바로 data를 전송. {} 객체로 감싸지 않음
-  return axios.post('/post', data, { credentials: 'include' });
+  return axios.post('/post', data);
 }
 
 function* addPost(action) {

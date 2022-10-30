@@ -109,7 +109,6 @@ router.post('/logout', isLoggedIn, (req, res) => {
     // req.session.destroy(); //유저 정보 세션에서 삭제
     // res.status(200).send('ok');
     console.log('logout?!');
-    //passport 0.6버전
     req.logout();
     req.session.destroy();
     res.status(200).json("server ok: 로그아웃 완료");
