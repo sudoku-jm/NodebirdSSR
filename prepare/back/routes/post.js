@@ -110,20 +110,19 @@ router.post('/images',isLoggedIn, upload.array('image'), async(req, res, next) =
 
 // post 코멘트 작성
 router.post('/:postId/comment', isLoggedIn, async (req ,res, next) => {  //POST /post/postID/comment
-  //주소부분에서 동적으로 바뀌는 것을 파라미터라고 한다
-
-  
+  // :postId 주소부분에서 동적으로 바뀌는 것을 파라미터라고 한다
   try{
     // 존재하지 않는 게시글에 댓글 달 우려가 있으므로 한 번 더 검사를 해준다.
     // 서버 쪽에서는 한 번 더 꼼꼼히 검사를 해주는 것이 좋다.
     const post = await Post.findOne({
-      where : {id : req.params.postId}
+      where : { id : req.params.postId },
     });
     if( !post ) {
       return res.status(403).send('존재하지 않는 게시글입니다.');
     }
 
-    const comment = await Post.create({
+    //코멘트 데이터 생성
+    const comment = await Comment.create({
       content : req.body.content, // 데이터로 전달받은 부분 req.body...
       PostId : parseInt(req.params.postId, 10), // 파라미터로 전달받은 부분 req.params...
       UserId : req.user.id,
@@ -136,7 +135,6 @@ router.post('/:postId/comment', isLoggedIn, async (req ,res, next) => {  //POST 
         attributes: ['id', 'nickname'],
       }],
     });
-
 
     res.status(201).json(fullComment); //다시 프론트로 json형태로 돌려줌.
 

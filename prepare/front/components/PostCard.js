@@ -159,7 +159,7 @@ const PostCard = ({ post }) => {
 // object는 shape으로 더 구체적으로 작성할 수 있다.
 PostCard.propTypes = {
   post: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     User: PropTypes.object,
     content: PropTypes.string,
     createdAt: PropTypes.string,

@@ -101,7 +101,7 @@ export const addPost = (data) => ({
 
 export const removePost = (data) => ({
   type: REMOVE_POST_REQUEST,
-  data: data.post.id
+  data
 });
 
 export const addComment = (data) => ({
@@ -243,6 +243,7 @@ const reducer = (state = initalState, action) => {
       case ADD_COMMENT_SUCCESS: {
         // const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         // post.Comments.unshift(dummyComment(action.data.content));
+        console.log('action.data.PostId?', action.data);
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
         post.Comments.unshift(action.data);
         draft.addCommentLoading = false;

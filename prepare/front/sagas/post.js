@@ -136,6 +136,7 @@ function* removePost(action) {
 function addCommentAPI(data) {
   // 주소만 봐도 어떤 의미인지 알 수 있게 만들어주는게 좋긴하다. 프론트와 백엔드 약속이다.
   // return axios.post(`/comment`, { // POST /comment
+
   return axios.post(`/post/${data.postId}/comment`, data); // POST /post/1/comment
   // data.postId는 파라미터로 전달된다(req.params.postId)
 }
