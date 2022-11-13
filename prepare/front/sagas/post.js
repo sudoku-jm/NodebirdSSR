@@ -18,7 +18,7 @@ import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 /* ==========retweet============ */
 function retweetAPI(data) {
   // 해당 포스트 주소 리트윗
-  return axios.get(`/post/${data}/retweet`);
+  return axios.post(`/post/${data}/retweet`);
 }
 
 function* retweet(action) {

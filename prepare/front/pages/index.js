@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
 
 function Home() {
   const dispatch = useDispatch();
@@ -17,15 +19,7 @@ function Home() {
       alert(retweetError);
     }
   }, [retweetError]);
-  useEffect(() => {
-    // 메인 접속 시 : 유저정보, 페이지 정보 불러옴
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST, // 매번 로그인 중인 것을 복구하기 위해(새로고침)
-    });
-    dispatch({
-      type: LOAD_POSTS_REQUEST, // 페이지 정보 불러오기
-    });
-  }, []);
+
   useEffect(() => {
     function onScroll() {
       const winSrcollY = window.scrollY;
@@ -63,5 +57,25 @@ function Home() {
     </AppLayout>
   );
 }
+
+// 서버사이드랜더링
+// 리덕스의 데이터가 채워진상태로 들고오게 함.
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
+  const cookie = req ? req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  store.dispatch({
+    type: LOAD_MY_INFO_REQUEST, // 매번 로그인 중인 것을 복구하기 위해(새로고침)
+  });
+  store.dispatch({
+    type: LOAD_POSTS_REQUEST, // 페이지 정보 불러오기
+  });
+
+  store.dispatch(END);
+  await store.sagaTask.toPromise();
+});
 
 export default Home;

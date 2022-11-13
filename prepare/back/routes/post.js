@@ -232,7 +232,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req ,res, next) => {  //POST 
       return res.status(403).send('자신의 글은 리트윗 할 수 없습니다.');
     }
 
-    const retweetTargetId = post.Retweet || post.id; //남이 리트윗 한 게시글이거나 리트윗 없는 게시글(null)
+    const retweetTargetId = post.RetweetId || post.id; //남이 리트윗 한 게시글이거나 리트윗 없는 게시글(null)
     const exPost = await Post.findOne({
       where : {
         UserId : req.user.id,
@@ -254,7 +254,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req ,res, next) => {  //POST 
     const retweetWithPrevPost = await Post.findOne({
       where : { id : retweet.id },  //리트윗 포스트 아이디.
       //해당 게시글이 가지고 있는 데이터들을 프론트로 전달.
-      idclude : [{
+      include : [{
         model : Post,
         as : 'Retweet',
         include : [{
@@ -267,18 +267,20 @@ router.post('/:postId/retweet', isLoggedIn, async (req ,res, next) => {  //POST 
         model : User,
         attributes : ['id','nickname'],
       },{
+        model: User, // 좋아요 누른 사람
+        as: 'Likers',
+        attributes: {
+          include : ['id'],
+        },
+      },{
         model : Image,
       },{
         model : Comment,  //댓글을 따로들고온다던가 하는 라우터를 따로 만들어줘도 좋다.(속도 성능 측면)
         include : [{
           model : User,
           attributes : ['id','nickname'],
-        }]
-      },{
-        model : User,
-        as : 'Likers',
-        attributes : ['id'],
-      }]
+        }],
+      }],
     });
     res.status(201).json(retweetWithPrevPost); //다시 프론트로 json형태로 돌려줌.
 

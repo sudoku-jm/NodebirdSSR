@@ -16,15 +16,14 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const { removePostLoading } = useSelector((state) => state.post);
   // const id = useSelector((state) => state.user.me && state.user.me.id);
+  const [commentFormOpended, setCommentFormOpended] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
-  const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아요 중 내가 있는가?
 
   // const { me } = useSelector((state) => state.user.me);
   // const id = me?.id; // me && me.id 와 같다. 옵셔널 체이닝 optional chaining.
 
   // 좋아요, 댓글 토글
   // const [liked, setLiked] = useState(false);
-  const [commentFormOpended, setCommentFormOpended] = useState(false);
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -71,22 +70,22 @@ const PostCard = ({ post }) => {
     });
   }, [id]);
 
+  const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아요 중 내가 있는가?
+
   return (
     <div style={{ marginBottom: 10 }}>
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
-          <RetweetOutlined key="retweet" onClick={onRetweet} />,
 
-          liked ? (
-            <HeartTwoTone
-              twoToneColor="#eb2f96"
-              key="heart"
-              onClick={onUnlike}
-            />
-          ) : (
-            <HeartOutlined key="heart" onClick={onLike} />
-          ),
+          post.RetweetId
+            ? <RetweetOutlined style={{ color: '#1890ff' }} key="retweet" onClick={onRetweet} />
+            :
+            <RetweetOutlined key="retweet" onClick={onRetweet} />,
+
+          liked
+            ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
+            : <HeartOutlined key="heart" onClick={onLike} />,
 
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
@@ -110,7 +109,7 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
-        title={post.RetweetId && post.Reteet ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
+        title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
         extra={id && <FollowButton post={post} />}
       >
         {post.RetweetId && post.Retweet

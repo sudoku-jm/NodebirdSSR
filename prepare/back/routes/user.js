@@ -174,10 +174,9 @@ router.patch('/nickname', isLoggedIn, async(res, req, next) => {    // PATCH /us
 
 
 //팔로우
-router.patch('/:userId/follow', isLoggedIn, async(res, req, next) => {      //PATCH /user/1/follow
-    try{
-        //팔로우 할 유저 존재 여부 확인
-        const user = await User.findOne({ where : {id : req.params.userId} });
+router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { // PATCH /user/1/follow
+    try {
+      const user = await User.findOne({ where: { id: req.params.userId }});
         if(!user){
             res.status(403).send('없는 사람을 팔로우하려고 하시네요?');
         }
@@ -189,7 +188,7 @@ router.patch('/:userId/follow', isLoggedIn, async(res, req, next) => {      //PA
             3               1           //1번 유저가 3번 유저를 팔로잉.(추가 addFollowers)
         */
         //update
-        res.status(200).json({ UserId : parseInt(req.params.userId , 10) });
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
         
     }catch(error){
         console.error(error);
@@ -198,10 +197,11 @@ router.patch('/:userId/follow', isLoggedIn, async(res, req, next) => {      //PA
 });
 
 //언팔로우(팔로우 취소)
-router.delete('/:userId/follow', isLoggedIn, async(res, req, next) => {     //DELETE /user/1/follow
+router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {     //DELETE /user/1/follow
+
     try{
         //언팔로우 할 유저 존재 여부 확인
-        const user = await User.findOne({ where : {id : req.params.userId} });
+        const user = await User.findOne({ where: { id: req.params.userId }});
         if(!user){
             res.status(403).send('없는 사람을 언팔로우하려고 하시네요?');
         }
@@ -223,7 +223,7 @@ router.get('/followers', isLoggedIn, async (req, res, next) => {       // GET /u
             res.status(403).send('없는 사람을 찾으려고 하시네요');
         }
         // 사용자의 팔로워 가져오기
-        const followers = await user.getFolloers();
+        const followers = await user.getFollowers();
         res.status(200).json(followers);
 
     }catch(error){

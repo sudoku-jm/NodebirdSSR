@@ -160,13 +160,12 @@ function* loadFollowings(action) {
 /* ==========팔로우============ */
 
 function followAPI(data) {
-  return axios.post(`/user/${data}/follow`);
+  return axios.patch(`/user/${data}/follow`);
 }
 
 function* follow(action) {
   try {
     const result = yield call(followAPI, action.data);
-    console.log('followAPI result', result);
     // yield delay(1000);
     yield put({
       type: FOLLOW_SUCCESS,
@@ -183,7 +182,8 @@ function* follow(action) {
 /* ==========언팔로우============ */
 
 function unfollowAPI(data) {
-  return axios.post(`/user/${data}/unfollow`);
+  console.log('data', data);
+  return axios.delete(`/user/${data}/follow`);
 }
 
 function* unfollow(action) {

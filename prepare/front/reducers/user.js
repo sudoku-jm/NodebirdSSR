@@ -185,7 +185,7 @@ const reducer = (state = initalState, action) => {
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
-        draft.me.Followings.push({ id: action.data.useId }); // 팔로우 하려는 사람 아이디추가
+        draft.me.Followings.push({ id: action.data.userId }); // 팔로우 하려는 사람 아이디추가
         break;
       case FOLLOW_FAILRE:
         draft.followLoading = false;
@@ -200,7 +200,7 @@ const reducer = (state = initalState, action) => {
       case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
         draft.unfollowDone = true;
-        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.useId);
+        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.userId);
         break;
       case UNFOLLOW_FAILRE:
         draft.unfollowLoading = false;
@@ -215,7 +215,7 @@ const reducer = (state = initalState, action) => {
       case REMOVE_FOLLOWER_SUCCESS:
         draft.removeFollowerLoading = false;
         draft.removeFollowerDone = true;
-        draft.me.Followers = draft.me.Follwers.filter((v) => v.id !== action.data.UserId);
+        draft.me.Followers = draft.me.Follwers.filter((v) => v.id !== action.data.userId);
         break;
       case REMOVE_FOLLOWER_FAILRE:
         draft.removeFollowerLoading = false;
