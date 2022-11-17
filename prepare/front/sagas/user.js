@@ -6,23 +6,43 @@ import {
   LOG_IN_FAILRE, LOG_IN_REQUEST, LOG_IN_SUCCESS,
   LOG_OUT_FAILRE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS,
   SIGN_UP_FAILRE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS,
-  LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILRE,
+  LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
   CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILRE,
   LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILRE,
   LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILRE,
-  REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILRE,
+  REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILRE, LOAD_USER_SUCCESS, LOAD_USER_FAILURE, LOAD_USER_REQUEST,
 } from '../reducers/user';
 
 /* ==========유저로그인 유지============ */
-function loadUserAPI() {
-  return axios.get('/user'); // 3060 요청
+function loadUserAPI(data) {
+  return axios.get(`/user/${data}`);
 }
 
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
-    console.log('result loadUserAPI', result);
+    console.log('loadUserData', result.data);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    console.log('result loadMyInfoAPI', loadMyInfoAPI);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
@@ -30,8 +50,8 @@ function* loadUser(action) {
   } catch (err) {
     console.error(err);
     yield put({
-      type: LOAD_MY_INFO_FAILRE,
-      error: err.response.data
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
     });
   }
 }
@@ -250,8 +270,11 @@ function* changeNickname(action) {
 }
 
 // LOG_IN_REQUEST 실행 : saga와 reducer LOG_IN_REQUEST는 동시에 실행된다.
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
 function* watchLoadUser() {
-  yield takeLatest(LOAD_MY_INFO_REQUEST, loadUser);
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
 function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
@@ -283,8 +306,9 @@ function* watchChangeNickname() {
 
 export default function* userSaga() {
   yield all([
-    fork(watchChangeNickname),
     fork(watchLoadUser),
+    fork(watchLoadMyInfo),
+    fork(watchChangeNickname),
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),
     fork(watchFollow),

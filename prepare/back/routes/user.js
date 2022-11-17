@@ -7,6 +7,7 @@ const router = express.Router();
 
 //회원정보 불러오기
 router.get('/', async (req, res,next) => {  //GET /user
+    console.log('/user',req.headers);
     try {
         if(req.user){
             const fullUserWithoutPassword = await User.findOne({
@@ -34,7 +35,7 @@ router.get('/', async (req, res,next) => {  //GET /user
 
     } catch(error){
         console.error(error);
-        return next(error);
+        next(error);
     }
 });
 //passport.authenticate의 내부 메커니즘을 통해서 LocalStrategy 이쪽으로 인증 처리 위임. local.js 전략을 실행시킨다.

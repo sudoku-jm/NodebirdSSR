@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 import axios from 'axios';
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -11,7 +12,7 @@ import wrapper from '../store/configureStore';
 function Home() {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { logInDone } = useSelector((state) => state.user);
+  // const { logInDone } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state) => state.post);
   // 리트윗 에러 경고창
   useEffect(() => {
@@ -20,6 +21,15 @@ function Home() {
     }
   }, [retweetError]);
 
+  // useEffect(() => {
+  //   dispatch({
+  //     type: LOAD_MY_INFO_REQUEST,
+  //   });
+
+  //   dispatch({
+  //     type: LOAD_POSTS_REQUEST,
+  //   });
+  // }, []);
   useEffect(() => {
     function onScroll() {
       const winSrcollY = window.scrollY;
@@ -63,17 +73,18 @@ function Home() {
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
   const cookie = req ? req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
-
   if (req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
   store.dispatch({
-    type: LOAD_MY_INFO_REQUEST, // 매번 로그인 중인 것을 복구하기 위해(새로고침)
-  });
-  store.dispatch({
-    type: LOAD_POSTS_REQUEST, // 페이지 정보 불러오기
+    type: LOAD_MY_INFO_REQUEST,
   });
 
+  store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+
+  // REQUEST 가 saga 에서 SUCCESS 될 때까지 기다려준다
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });
