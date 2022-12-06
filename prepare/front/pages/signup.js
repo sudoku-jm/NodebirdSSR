@@ -4,10 +4,13 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { END } from 'redux-saga';
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 // import { signUpRequestAction, SIGN_UP_REQUEST } from "../reducers/user";
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
 
 function TextInput({ value }) {
   return <div>{value}</div>;
@@ -140,5 +143,20 @@ function Signup() {
     </AppLayout>
   );
 }
+
+// 서버에서 작동하는 것
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = ''; // 기본적으로 쿠키를 지워준다.
+  if (context.req && cookie) { // 서버로 보낼 때 쿠키가 있을때만 넣어준다.
+    axios.defaults.headers.Cookie = cookie;
+  }
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch(END);
+
+  await context.store.sagaTask.toPromise();
+});
 
 export default Signup;

@@ -108,6 +108,58 @@ router.post('/images',isLoggedIn, upload.array('image'), async(req, res, next) =
   res.json(req.files.map((v) => v.filename)); //어디로 업로드되었는지 프론트로 넘겨준다.
 });
 
+// post 단일 포스트 호출
+router.get('/:postId', async (req ,res, next) => {  //GET /post/1
+
+  try{
+    const post = await Post.findOne({
+      where : {id : req.params.postId}
+    });
+
+    if( !post ) {
+      return res.status(404).send('존재하지 않는 게시글입니다.');
+    }
+  
+    const fullPost = await Post.findOne({
+      where : { id : post.id },  
+ 
+      include : [{
+        model : Post,
+        as : 'Retweet',
+        include : [{
+          model : User,
+          attributes : ['id','nickname'],
+        },{
+          model : Image,
+        }]  
+      },{
+        model : User,
+        attributes : ['id','nickname'],
+      },{
+        model: User, 
+        as: 'Likers',
+        attributes: {
+          include :  ['id','nickname'],
+        },
+      },{
+        model : Image,
+      },{
+        model : Comment,  
+        include : [{
+          model : User,
+          attributes : ['id','nickname'],
+        }],
+      }],
+    });
+    res.status(200).json(fullPost);
+
+  }catch(error){
+    console.error(error);
+    next(error);
+  }
+});
+
+
 // post 코멘트 작성
 router.post('/:postId/comment', isLoggedIn, async (req ,res, next) => {  //POST /post/postID/comment
   // :postId 주소부분에서 동적으로 바뀌는 것을 파라미터라고 한다
@@ -289,5 +341,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req ,res, next) => {  //POST 
     next(error);
   }
 });
+
+
 
 module.exports = router;

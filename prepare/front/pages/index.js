@@ -70,23 +70,44 @@ function Home() {
 
 // 서버사이드랜더링
 // 리덕스의 데이터가 채워진상태로 들고오게 함.
-export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
-  const cookie = req ? req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (req && cookie) {
+// export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
+//   const cookie = req ? req.headers.cookie : '';
+//   axios.defaults.headers.Cookie = '';
+//   if (req && cookie) {
+//     axios.defaults.headers.Cookie = cookie;
+//   }
+//   store.dispatch({
+//     type: LOAD_MY_INFO_REQUEST,
+//   });
+
+//   store.dispatch({
+//     type: LOAD_POSTS_REQUEST,
+//   });
+
+//   // REQUEST 가 saga 에서 SUCCESS 될 때까지 기다려준다
+//   store.dispatch(END);
+//   await store.sagaTask.toPromise();
+// });
+
+// 서버에서 작동하는 것
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log(context.req.headers);
+  const cookie = context.req ? context.req.headers.cookie : '';
+  // 다른사람이 요청보내도 나의 정보를 다른사람이 로그인 될 수 있다.
+  // 쿠키가 공유되어버린다.
+  axios.defaults.headers.Cookie = ''; // 기본적으로 쿠키를 지워준다.
+  if (context.req && cookie) { // 서버로 보낼 때 쿠키가 있을때만 넣어준다.
     axios.defaults.headers.Cookie = cookie;
   }
-  store.dispatch({
+  context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
   });
-
-  store.dispatch({
+  context.store.dispatch({
     type: LOAD_POSTS_REQUEST,
   });
+  context.store.dispatch(END);
 
-  // REQUEST 가 saga 에서 SUCCESS 될 때까지 기다려준다
-  store.dispatch(END);
-  await store.sagaTask.toPromise();
+  await context.store.sagaTask.toPromise();
 });
 
 export default Home;

@@ -4,6 +4,7 @@ import produce from 'immer';
 
 export const initalState = {
   mainPosts: [],
+  singlePost: null, // 게시글 1개만 불러옴.
   imagePaths: [],
   hasMorePosts: true, // 데이터 더이상 불러 올게 없을 경우 false
   likePostLoading: false, // LIKE POST
@@ -15,6 +16,9 @@ export const initalState = {
   loadPostsLoading: false, // 데이터 로드 시도
   loadPostsDone: false,
   loadPostsError: null,
+  loadPostLoading: false, // 단일 포스트 데이터 로드 시도
+  loadPostDone: false,
+  loadPostError: null,
   addPostLoading: false, // 게시글 작성 시도
   addPostDone: false,
   addPostError: null,
@@ -74,6 +78,18 @@ export const UNLIKE_POST_FAILRE = 'UNLIKE_POST_FAILRE';
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST'; // 화면 로드
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS'; // 화면 로드 성공
 export const LOAD_POSTS_FAILRE = 'LOAD_POSTS_FAILRE'; // 화면 로드 실패
+
+export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST'; // 특정 사용자 화면 로드
+export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS'; // 특정 사용자 화면 로드 성공
+export const LOAD_USER_POSTS_FAILRE = 'LOAD_USER_POSTS_FAILRE'; // 특정 사용자 화면 로드 실패
+
+export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST'; // 특정 해시태그 검색
+export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
+export const LOAD_HASHTAG_POSTS_FAILRE = 'LOAD_HASHTAG_POSTS_FAILRE';
+
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILRE = 'LOAD_POST_FAILRE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -184,12 +200,18 @@ const reducer = (state = initalState, action) => {
         draft.likePostLoading = false;
         draft.likePostError = action.error;
         break;
-      //= ============== LOAD POST
+      //= ============== LOAD USER POSTS 특정사용자의 여러 포스트
+      //= ============== LOAD HASHTAG POSTS 해시태그 검색 포스트
+      //= ============== LOAD POST 여러 포스트
+      case LOAD_USER_POSTS_REQUEST:
+      case LOAD_HASHTAG_POSTS_REQUEST:
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsError = null;
         draft.loadPostsDone = false;
         break;
+      case LOAD_USER_POSTS_SUCCESS:
+      case LOAD_HASHTAG_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS:
         // action.data 기존데이터 + concat으로 불러오는 데이터 합쳐주기
         draft.mainPosts = draft.mainPosts.concat(action.data); // 최신데이터.concat(이전데이터)
@@ -197,9 +219,26 @@ const reducer = (state = initalState, action) => {
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
         break;
+      case LOAD_USER_POSTS_FAILRE:
+      case LOAD_HASHTAG_POSTS_FAILRE:
       case LOAD_POSTS_FAILRE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
+        break;
+      //= ============== LOAD POST 단일 포스트
+      case LOAD_POST_REQUEST:
+        draft.loadPostLoading = true;
+        draft.loadPostError = null;
+        draft.loadPostDone = false;
+        break;
+      case LOAD_POST_SUCCESS:
+        draft.singlePost = action.data; // 게시글 1개만 불러옴
+        draft.loadPostLoading = false;
+        draft.loadPostDone = true;
+        break;
+      case LOAD_POST_FAILRE:
+        draft.loadPostLoading = false;
+        draft.loadPostError = action.error;
         break;
       //= ==============POST ADD
       case ADD_POST_REQUEST:

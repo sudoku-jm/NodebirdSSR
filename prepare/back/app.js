@@ -10,6 +10,7 @@ const path = require('path');
 const postRouter = require('./routes/post');  //게시글 1개만
 const postsRuter = require('./routes/posts'); //여러 게시글
 const userRouter = require('./routes/user'); 
+const hashtagRouter = require('./routes/hashtag'); 
 const db = require('./models'); // model > index.js 에서 등록된 db를 들고온다.
 const passportConfig = require('./passport'); //passport > index.js 등록
 
@@ -86,6 +87,9 @@ app.use('/post',postRouter);
 
 //유저정보, 회원가입
 app.use('/user',userRouter); 
+
+//해시태그 라우터
+app.use('/hashtag',hashtagRouter); 
 
 //에러처리 미들웨어는 마지막으로 들어감. 직접 작성해줄 수 있다.
 // app.use((err, req, res, next) => {

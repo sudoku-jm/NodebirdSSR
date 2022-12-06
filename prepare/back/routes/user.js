@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const { User, Post } = require('../models');
+const { Op } = require('sequelize');
+const { User, Post, Image, Comment,} = require('../models');
 const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
 const router = express.Router();
 
@@ -48,6 +49,96 @@ router.get('/', async (req, res,next) => {  //GET /user
     예) return done(null, false, {reason : '비밀번호가 틀렸습니다.'});
     예) return done(error); 서버쪽 에러
 */
+
+
+//특정사용자정보 들고오기
+router.get('/:userId', async (req, res,next) => {  //GET /user/1
+    try {
+    
+        const fullUserWithoutPassword = await User.findOne({
+            where : { id : req.params.userId },
+            attributes : {
+                exclude : ['password']
+            },
+            include : [{
+                model : Post,
+                attributes : ['id'],
+            },{
+                model : User,
+                as : 'Followings',
+                attributes : ['id'],
+            },{
+                model : User,
+                as : 'Followers',
+                attributes : ['id'],
+            }]
+        });
+
+        //남의 정보 들고올 때 없는 아이디의 경우 거르기
+        if(fullUserWithoutPassword){
+            //시퀄라이즈로 들고 온 데이터는 쓸 수 있는 json 데이터로변경. 시퀄라이즈는 json으로 안보내준다.
+            const data = fullUserWithoutPassword.toJSON();
+            //개인정보 침해예방
+            data.Posts = data.Posts.length;
+            data.followers = data.Followers.length;
+            data.followings = data.Followings.length;
+            res.status(200).json(data); //갈아끼운 데이터로 보내준다
+        }else{
+            res.status(404).json('존재하지 않는 사용자입니다');
+        }
+
+
+    } catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
+//특정사용자 포스트 호출
+router.get('/:userId/posts', async (req, res, next) => { // GET /user/1/posts
+  try {
+    const where = { UserId: req.params.userId };
+    if (parseInt(req.query.lastId, 10)) { // 초기 로딩이 아닐 때
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10)}
+    } // 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      include: [{
+        model: User,
+        attributes: ['id', 'nickname'],
+      }, {
+        model: Image,
+      }, {
+        model: Comment,
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+          order: [['createdAt', 'DESC']],
+        }],
+      }, {
+        model: User, // 좋아요 누른 사람
+        as: 'Likers',
+        attributes: ['id'],
+      }, {
+        model: Post,
+        as: 'Retweet',
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }, {
+          model: Image,
+        }]
+      }],
+    });
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 
 
 //로그인
