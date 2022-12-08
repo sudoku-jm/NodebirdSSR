@@ -117,6 +117,28 @@ function* loadPosts(action) {
     });
   }
 }
+/* ==========loadPostsList============ */
+// function loadPostsListAPI() {
+//   return axios.get('/posts/list');
+// }
+
+// function* loadPostsList() {
+//   try {
+//     const result = yield call(loadPostsListAPI);
+//     // yield delay(1000);
+//     console.log('loadPostsListAPI result', result);
+//     yield put({
+//       type: LOAD_POSTS_LIST_SUCCESS,
+//       data: result.data, // 게시글 갯수
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     yield put({
+//       type: LOAD_POSTS_LIST_FAILRE,
+//       error: err.response.data
+//     });
+//   }
+// }
 /* ==========loadPost============ */
 function loadPostAPI(data) {
   return axios.get(`/post/${data}`); // post/1
@@ -309,6 +331,10 @@ function* watchLoadPosts() {
   // yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
   yield throttle(2000, LOAD_POSTS_REQUEST, loadPosts);
 }
+// function* watchLoadPostsList() {
+//   // yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
+//   yield throttle(2000, LOAD_POSTS_LIST_REQUEST, loadPostsList);
+// }
 function* watchLoadPost() {
   yield throttle(2000, LOAD_POST_REQUEST, loadPost);
 }
@@ -340,6 +366,7 @@ function* watchRetweet() {
 export default function* postSaga() {
   yield all([
     fork(watchUploadImages),
+    // fork(watchLoadPostsList),
     fork(watchLoadPosts),
     fork(watchLoadUserPosts),
     fork(watchLoadHashtagPosts),

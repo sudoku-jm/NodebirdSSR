@@ -67,4 +67,25 @@ router.get('/', async (req, res, next) => {   //GET /posts
     }
 });
 
+
+
+// router.get('/list', async (req, res, next) => {   //GET /posts/list
+//   //쿼리스트링을 받은 값 : req.query.로 불러옴
+//   try{
+//       let where = {};
+
+//       const posts = await Post.findAll({    // 모든 게시글 가지고 오기
+//           where,
+//       });
+
+//       console.log(posts.length);
+//       res.status(200).json(posts);
+
+//   }catch(error){
+//       console.error(error);
+//       next(error);
+//   }
+// });
+
+
 module.exports = router;

@@ -4,6 +4,7 @@ import produce from 'immer';
 
 export const initalState = {
   mainPosts: [],
+  // postListLen: 0, // 포스팅 갯수
   singlePost: null, // 게시글 1개만 불러옴.
   imagePaths: [],
   hasMorePosts: true, // 데이터 더이상 불러 올게 없을 경우 false
@@ -16,6 +17,9 @@ export const initalState = {
   loadPostsLoading: false, // 데이터 로드 시도
   loadPostsDone: false,
   loadPostsError: null,
+  // loadPostslistLoading: false, // 데이터 로드 시도
+  // loadPostslistDone: false,
+  // loadPostslistError: null,
   loadPostLoading: false, // 단일 포스트 데이터 로드 시도
   loadPostDone: false,
   loadPostError: null,
@@ -78,6 +82,10 @@ export const UNLIKE_POST_FAILRE = 'UNLIKE_POST_FAILRE';
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST'; // 화면 로드
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS'; // 화면 로드 성공
 export const LOAD_POSTS_FAILRE = 'LOAD_POSTS_FAILRE'; // 화면 로드 실패
+
+// export const LOAD_POSTS_LIST_REQUEST = 'LOAD_POSTS_LIST_REQUEST'; // 화면 로드
+// export const LOAD_POSTS_LIST_SUCCESS = 'LOAD_POSTS_LIST_SUCCESS'; // 화면 로드 성공
+// export const LOAD_POSTS_LIST_FAILRE = 'LOAD_POSTS_LIST_FAILRE'; // 화면 로드 실패
 
 export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST'; // 특정 사용자 화면 로드
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS'; // 특정 사용자 화면 로드 성공
@@ -225,6 +233,23 @@ const reducer = (state = initalState, action) => {
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
         break;
+        //= ============== LOAD POST LIST 포스트 갯수
+        // case LOAD_POSTS_LIST_REQUEST:
+        //   draft.loadPostslistLoading = true;
+        //   draft.loadPostslistError = null;
+        //   draft.loadPostslistDone = false;
+        //   break;
+
+        // case LOAD_POSTS_LIST_SUCCESS:
+        //   draft.postListLen = action.data;
+        //   draft.loadPostslistLoading = false;
+        //   draft.loadPostslistDone = true;
+        //   break;
+
+      // case LOAD_POSTS_LIST_FAILRE:
+      //   draft.loadPostslistLoading = false;
+      //   draft.loadPostslistError = action.error;
+      //   break;
       //= ============== LOAD POST 단일 포스트
       case LOAD_POST_REQUEST:
         draft.loadPostLoading = true;
