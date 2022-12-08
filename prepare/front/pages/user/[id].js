@@ -1,3 +1,4 @@
+// user/[id].js
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Card } from 'antd';
@@ -40,19 +41,12 @@ function User() {
       const winSrcollY = window.scrollY;
       const clientH = document.documentElement.clientHeight;
       const documentScrollH = document.documentElement.scrollHeight - 300;
-      /* scrollY : 얼마나 내렸는지,
-        clientHeight : 화면 높이,
-        scrollHeight : 총 길이
 
-        scrollY + clientHeight = scrollHeight
-      */
-      // console.log(winSrcollY, clientH, documentScrollH);
       if (winSrcollY + clientH > documentScrollH) {
         if (hasMorePosts && !loadPostsLoading) {
-          const lastId = mainPosts[mainPosts.length - 1]?.id; // 총 게시글 수 - 1 = 라스트 아이디
-          // 게시글이 없는경우 undefind에러가 날 수 있음.
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
-            type: LOAD_USER_POSTS_REQUEST, // 새로운 것
+            type: LOAD_USER_POSTS_REQUEST,
             data: id,
             lastId,
           });
@@ -63,7 +57,7 @@ function User() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePosts, loadPostsLoading, mainPosts]);
+  }, [hasMorePosts, loadPostsLoading, mainPosts, id]);
 
   return (
     <AppLayout>
@@ -107,9 +101,11 @@ function User() {
               title={userInfo.nickname}
             />
           </Card>
+
         )
         : null}
       {mainPosts.map((c) => (
+        c.User.id === userInfo.id &&
         <PostCard key={c.id} post={c} />
       ))}
 

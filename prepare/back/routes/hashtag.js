@@ -24,7 +24,7 @@ router.get('/:hashtag', async (req, res, next) => {   //GET /hashtag/노드
             include : [{
                 model : Hashtag,
                 //인클루드 해서 조건 적어줄 수 있다.
-                where : {name : req.params.hashtag},
+                where : {name : decodeURIComponent(req.params.hashtag)},
             },{
               model: User,
               attributes: ['id', 'nickname'],

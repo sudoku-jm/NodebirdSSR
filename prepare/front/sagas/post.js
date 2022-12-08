@@ -43,8 +43,9 @@ function* retweet(action) {
 /* ==========loadHashtagPost============ */
 function loadHashtagPostsAPI(data, lastId) {
   // 해사태그 데이터 인자 2개 넘김
-  // hashtag/노드 : 해시태그가 '노드'들고있는 포스팅 호출
-  return axios.get(`/hashtag/${data}?lastId=${lastId || 0}`);
+  // data : tag명
+  // GET hashtag/노드 : 해시태그가 '노드'들고있는 포스팅 호출
+  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
 }
 
 function* loadHashtagPosts(action) {
@@ -65,7 +66,7 @@ function* loadHashtagPosts(action) {
 }
 /* ==========loadUserPost============ */
 function loadUserPostsAPI(data, lastId) {
-  // user/1/posts : 1번 유저의 게시글들 호출
+  // GET user/1/posts : 1번 유저의 게시글들 호출
   return axios.get(`/user/${data}/posts?lastId=${lastId || 0}`);
 }
 
