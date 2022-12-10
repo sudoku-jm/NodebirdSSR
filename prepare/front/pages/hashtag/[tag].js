@@ -47,9 +47,12 @@ function Hashtag() {
 
   return (
     <AppLayout>
-      {mainPosts.map((c) => (
-        <PostCard key={c.id} post={c} />
-      ))}
+      {(
+        mainPosts.length > 0 && !loadPostsLoading)
+        ? mainPosts.map((c) => (
+          <PostCard key={c.id} post={c} />
+        ))
+        : <div>해시태그 <mark>{tag}</mark>의 포스팅이 없습니다.</div>}
       <div ref={hasMorePosts && !loadPostsLoading ? ref : undefined} style={{ height: 10 }} />
     </AppLayout>
 

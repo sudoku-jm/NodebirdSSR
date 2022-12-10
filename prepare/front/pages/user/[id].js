@@ -16,48 +16,51 @@ import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
 function User() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { me, userInfo } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-
   const { id } = router.query;
+  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
+  const { me, userInfo } = useSelector((state) => state.user);
 
   const [ref, inView] = useInView();
 
-  // useEffect(
-  //   () => {
-  //     if (inView && hasMorePosts && !loadPostsLoading) {
-  //       const lastId = mainPosts[mainPosts.length - 1]?.id;
-  //       dispatch({
-  //         type: LOAD_POSTS_REQUEST,
-  //         lastId,
-  //         data: id,
-  //       });
-  //     }
-  //   },
-  //   [inView, hasMorePosts, loadPostsLoading, mainPosts, id],
-  // );
-  useEffect(() => {
-    function onScroll() {
-      const winSrcollY = window.scrollY;
-      const clientH = document.documentElement.clientHeight;
-      const documentScrollH = document.documentElement.scrollHeight - 300;
-
-      if (winSrcollY + clientH > documentScrollH) {
-        if (hasMorePosts && !loadPostsLoading) {
-          const lastId = mainPosts[mainPosts.length - 1]?.id;
-          dispatch({
-            type: LOAD_USER_POSTS_REQUEST,
-            data: id,
-            lastId,
-          });
-        }
+  useEffect(
+    () => {
+      if (inView && hasMorePosts && !loadPostsLoading) {
+        const lastId = mainPosts[mainPosts.length - 1]?.id;
+        dispatch({
+          type: LOAD_USER_POSTS_REQUEST,
+          lastId,
+          data: id,
+        });
       }
-    }
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, [hasMorePosts, loadPostsLoading, mainPosts, id]);
+    },
+    [inView, hasMorePosts, loadPostsLoading, mainPosts, id],
+  );
+  // useEffect(() => {
+  //   function onScroll() {
+  //     const winSrcollY = window.scrollY;
+  //     const clientH = document.documentElement.clientHeight;
+  //     const documentScrollH = document.documentElement.scrollHeight - 300;
+
+  //     if (winSrcollY + clientH > documentScrollH) {
+  //       console.log('mainPosts1111', mainPosts);
+  //       if (hasMorePosts && !loadPostsLoading) {
+  //         console.log('hasMorePosts22222', hasMorePosts);
+  //         console.log('loadPostsLoading22222', loadPostsLoading);
+  //         console.log('mainPosts22222', mainPosts);
+  //         const lastId = mainPosts[mainPosts.length - 1]?.id;
+  //         dispatch({
+  //           type: LOAD_USER_POSTS_REQUEST,
+  //           data: id,
+  //           lastId,
+  //         });
+  //       }
+  //     }
+  //   }
+  //   window.addEventListener('scroll', onScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', onScroll);
+  //   };
+  // }, [hasMorePosts, loadPostsLoading, mainPosts, id]);
 
   return (
     <AppLayout>
@@ -105,11 +108,10 @@ function User() {
         )
         : null}
       {mainPosts.map((c) => (
-        c.User.id === userInfo.id &&
         <PostCard key={c.id} post={c} />
       ))}
 
-      <div ref={hasMorePosts && !loadPostsLoading ? ref : undefined} style={{ height: 10 }} />
+      <div ref={hasMorePosts && !loadPostsLoading ? ref : undefined} style={{ height: 50 }} />
     </AppLayout>
 
   );

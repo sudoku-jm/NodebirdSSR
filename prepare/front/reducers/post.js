@@ -221,11 +221,12 @@ const reducer = (state = initalState, action) => {
       case LOAD_USER_POSTS_SUCCESS:
       case LOAD_HASHTAG_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS:
-        // action.data 기존데이터 + concat으로 불러오는 데이터 합쳐주기
-        draft.mainPosts = draft.mainPosts.concat(action.data); // 최신데이터.concat(이전데이터)
-        draft.hasMorePosts = draft.mainPosts.length === 10; // 데이터 10개 이하 불러오기 멈춤
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
+        // action.data 기존데이터 + concat으로 불러오는 데이터 합쳐주기
+        draft.mainPosts = draft.mainPosts.concat(action.data); // 최신데이터.concat(이전데이터)
+        console.log('draft.mainPosts.length', draft.mainPosts.length);
+        draft.hasMorePosts = action.data.length === 10; // 데이터 10개 이하 불러오기 멈춤
         break;
       case LOAD_USER_POSTS_FAILRE:
       case LOAD_HASHTAG_POSTS_FAILRE:
@@ -233,23 +234,6 @@ const reducer = (state = initalState, action) => {
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
         break;
-        //= ============== LOAD POST LIST 포스트 갯수
-        // case LOAD_POSTS_LIST_REQUEST:
-        //   draft.loadPostslistLoading = true;
-        //   draft.loadPostslistError = null;
-        //   draft.loadPostslistDone = false;
-        //   break;
-
-        // case LOAD_POSTS_LIST_SUCCESS:
-        //   draft.postListLen = action.data;
-        //   draft.loadPostslistLoading = false;
-        //   draft.loadPostslistDone = true;
-        //   break;
-
-      // case LOAD_POSTS_LIST_FAILRE:
-      //   draft.loadPostslistLoading = false;
-      //   draft.loadPostslistError = action.error;
-      //   break;
       //= ============== LOAD POST 단일 포스트
       case LOAD_POST_REQUEST:
         draft.loadPostLoading = true;

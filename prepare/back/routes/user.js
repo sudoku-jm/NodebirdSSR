@@ -50,6 +50,53 @@ router.get('/', async (req, res,next) => {  //GET /user
     예) return done(error); 서버쪽 에러
 */
 
+//팔로워 목록 불러오기
+router.get('/followers', isLoggedIn, async (req, res, next) => {       // GET /user/followers
+    try{
+        //사용자 먼저 찾기
+        const user = await User.findOne({ where : {id : req.user.id} });
+        if(!user){
+            res.status(403).send('없는 사람을 찾으려고 하시네요');
+        }
+        // 사용자의 팔로워 가져오기
+        const followers = await user.getFollowers({
+            offset :  parseInt(req.query.offset, 10),
+            limit :  parseInt(req.query.limit, 10),
+            attributes : {
+                exclude : ['password']
+            },
+        });
+        res.status(200).json(followers);
+
+    }catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
+//팔로잉 목록 불러오기
+router.get('/followings', isLoggedIn, async (req, res, next) => {       // GET /user/followings
+    try{
+        //사용자 먼저 찾기
+        const user = await User.findOne({ where : {id : req.user.id} });
+        if(!user){
+            res.status(403).send('없는 사람을 찾으려고 하시네요');
+        }
+        // 사용자의 팔로잉 가져오기
+        const followings = await user.getFollowings({
+            limit : parseInt(req.query.limit, 10),
+            attributes : {
+                exclude : ['password']
+            },
+        });
+        res.status(200).json(followings);
+
+    }catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
 
 //특정사용자정보 들고오기
 router.get('/:userId', async (req, res,next) => {  //GET /user/1
@@ -306,41 +353,6 @@ router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {     //D
     }
 });
 
-//팔로워 목록 불러오기
-router.get('/followers', isLoggedIn, async (req, res, next) => {       // GET /user/followers
-    try{
-        //사용자 먼저 찾기
-        const user = await User.findOne({ where : {id : req.user.id} });
-        if(!user){
-            res.status(403).send('없는 사람을 찾으려고 하시네요');
-        }
-        // 사용자의 팔로워 가져오기
-        const followers = await user.getFollowers();
-        res.status(200).json(followers);
-
-    }catch(error){
-        console.error(error);
-        next(error);
-    }
-});
-
-//팔로잉 목록 불러오기
-router.get('/followings', isLoggedIn, async (req, res, next) => {       // GET /user/followings
-    try{
-        //사용자 먼저 찾기
-        const user = await User.findOne({ where : {id : req.user.id} });
-        if(!user){
-            res.status(403).send('없는 사람을 찾으려고 하시네요');
-        }
-        // 사용자의 팔로잉 가져오기
-        const followings = await user.getFollowings();
-        res.status(200).json(followings);
-
-    }catch(error){
-        console.error(error);
-        next(error);
-    }
-});
 
 //팔로워 차단,제거
 router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {       // DELETE /user/follower/3

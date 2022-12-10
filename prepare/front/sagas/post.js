@@ -101,7 +101,7 @@ function loadPostsAPI(lastId) {
 
 function* loadPosts(action) {
   try {
-    const result = yield call(loadPostsAPI, action.data);
+    const result = yield call(loadPostsAPI, action.lastId);
     // yield delay(1000);
     console.log('loadPostsAPI result', result);
     yield put({

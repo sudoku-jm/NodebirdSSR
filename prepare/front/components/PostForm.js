@@ -3,6 +3,7 @@ import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
 import useInput from '../hooks/useInput';
+import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -88,7 +89,7 @@ const PostForm = () => {
         {/* 이미지 미리보기란 */}
         {imagePaths.map((y, i) => (
           <div key={y} style={{ display: 'inline-block' }}>
-            <img src={`http://localhost:5500/images/${y}`} style={{ width: '200px' }} alt={y} />
+            <img src={`${backUrl}/images/${y}`} style={{ width: '200px' }} alt={y} />
             <div>
               <Button onClick={onRemoveImage(i)}>제거</Button>
             </div>

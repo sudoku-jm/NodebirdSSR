@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
 import ImagesZoom from './ImagesZoom';
+import { backUrl } from '../config/config';
 
 function PostImages({ images }) {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
@@ -19,7 +20,7 @@ function PostImages({ images }) {
   if (images.length === 1) {
     return (
       <>
-        <img role="presentation" style={styleImgViewFull} src={`http://localhost:5500/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={styleImgViewFull} src={`${backUrl}/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -27,8 +28,8 @@ function PostImages({ images }) {
   if (images.length === 2) {
     return (
       <>
-        <img role="presentation" style={styleImgViewHalf} src={`http://localhost:5500/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
-        <img role="presentation" style={styleImgViewHalf} src={`http://localhost:5500/images/${images[1].src}`} alt={images[1].src} onClick={onZoom} />
+        <img role="presentation" style={styleImgViewHalf} src={`${backUrl}/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={styleImgViewHalf} src={`${backUrl}/images/${images[1].src}`} alt={images[1].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -36,7 +37,7 @@ function PostImages({ images }) {
 
   return (
     <div>
-      <img role="presentation" style={styleImgViewHalf} src={`http://localhost:5500/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+      <img role="presentation" style={styleImgViewHalf} src={`${backUrl}/images/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
       <div
         role="presentation"
         style={styleImgWrap}
