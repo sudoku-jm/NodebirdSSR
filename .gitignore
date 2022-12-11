@@ -8,6 +8,9 @@
 /.pnp
 .pnp.js
 
+#upload image files
+/prepare/back/uploads/*
+
 # testing
 /coverage
 
