@@ -8,7 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
 import Head from 'next/head';
 import AppLayout from '../../components/AppLayout';
-import { LOAD_POSTS_REQUEST, LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
+import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
 import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
