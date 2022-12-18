@@ -19,8 +19,8 @@ dotenv.config();
 
 const app = express(); //호출을 한 번 해야한다.
 //model > index.js 에서 등록한 db를 sync() 메소드를 통해 연결.
-db.sequelize.sync()
-  .then(() => {
+db.sequelize.sync().then(() => {
+    // force: true ,
     console.log('db 연결 성공');
   })
   .catch(console.error);

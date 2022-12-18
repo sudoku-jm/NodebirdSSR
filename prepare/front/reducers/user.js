@@ -1,4 +1,5 @@
-import produce from 'immer';
+import produce from '../util/produce';
+// import produce from 'immer';
 
 export const initalState = {
   loadMyInfoLoading: false, // 유저 정보 가져오기 시도중

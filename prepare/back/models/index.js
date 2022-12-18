@@ -1,4 +1,11 @@
-const Sequelize = require('Sequelize');
+const Sequelize = require('sequelize');
+//model > 에서 작성하고 module.export 했던 각각의 모델을 가져온다.
+const comment = require('./comment');
+const hashtag = require('./hashtag');
+const image = require('./image');
+const post = require('./post');
+const user = require('./user');
+
 const env = process.env.NODE_ENV || 'development';  
 const config = require('../config/config')[env];
 const db = {};
@@ -21,19 +28,15 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 */
 
 
-// 모델 등록
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.Comment = comment;
+db.Hashtag = hashtag;
+db.Image = image;
+db.Post = post;
+db.User = user;
 
-
-//model > 에서 작성하고 module.export 했던 각각의 모델을 가져온다.
-db.Comment = require('./comment')(sequelize, Sequelize);
-db.Hashtag = require('./hashtag')(sequelize, Sequelize);
-db.Image = require('./image')(sequelize, Sequelize);
-db.Post = require('./post')(sequelize, Sequelize);
-db.User = require('./user')(sequelize, Sequelize);
-
-
+Object.keys(db).forEach(modelName => {
+  db[modelName].init(sequelize);
+})
 //각 모델에서 associate에 작성했던 것을 실행시켜주는 반복문.
 //각 모델의 associate에서 db를 붙인 이유. db.User = db[User]
 Object.keys(db).forEach(modelName => {
@@ -42,6 +45,10 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+
+// 모델 등록
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 
 module.exports = db;

@@ -4,6 +4,9 @@
 /prepare/back/node_modules
 /prepare/front/node_modules
 /prepare/front_back/node_modules
+/back/node_modules
+/front/node_modules
+/front_back/node_modules
 /node_modules
 /.pnp
 .pnp.js
@@ -41,10 +44,10 @@ yarn-error.log*
 #key
 /prepare/react-nodebird.pem
 /prepare/.react-nodebird.pem
-/prepare/node_modules
-/prepare/.env
-/prepare/.next
 react-nodebird.pem
 .react-nodebird.pem
+node_modules
+.env
+.next
 =======
 

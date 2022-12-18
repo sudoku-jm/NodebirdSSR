@@ -14,7 +14,6 @@ router.get('/', async (req, res, next) => {   //GET /posts
         } // 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
         // lastId보다 작은 10개를 불러와라.
         // ~보다 작은 것 : [Op.lt]
-
         const posts = await Post.findAll({    // 모든 게시글 가지고 오기
             where,
             limit : 10, //10개만 가져와라
