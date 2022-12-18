@@ -6,6 +6,8 @@ const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const postRouter = require('./routes/post');  //게시글 1개만
 const postsRuter = require('./routes/posts'); //여러 게시글
@@ -27,14 +29,20 @@ db.sequelize.sync().then(() => {
 
 //패스포트 연결
 passportConfig();
+if(process.env.NODE_ENV === 'production'){
+  app.use(morgan('combined')); 
+  app.use(hpp());
+  app.use(helmet());
+}else{
+  app.use(morgan('dev')); //front -> back 요청 시 어디 api로 요청했는지 디버깅 용이.
+}
 
-app.use(morgan('dev')); //front -> back 요청 시 어디 api로 요청했는지 디버깅 용이.
 
 //credential true가 되어야 쿠키도 같이 전달이 된다.
 // origin : '*',
 // origin : true,
 app.use(cors({
-  origin : 'http://localhost:3060',
+  origin : ['http://localhost:3060', 'sudoku.pe.kr'],
   credentials : true, 
 })); 
 
