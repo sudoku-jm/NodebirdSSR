@@ -104,6 +104,6 @@ app.use('/hashtag',hashtagRouter);
 
 // });
 
-app.listen(5500, () => {
+app.listen(80, () => {
   console.log('서버 실행 중~!~!~!');
 });
