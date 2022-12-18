@@ -42,10 +42,10 @@ yarn-error.log*
 .next
 
 #key
-/prepare/react-nodebird.pem
-/prepare/.react-nodebird.pem
-react-nodebird.pem
-.react-nodebird.pem
+/prepare/react-nodebird-awspem
+/prepare/.react-nodebird-aws.pem
+react-nodebird-aws.pem
+.react-nodebird-aws.pem
 node_modules
 .env
 .next
