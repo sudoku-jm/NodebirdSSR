@@ -42,7 +42,7 @@ if(process.env.NODE_ENV === 'production'){
 // origin : '*',
 // origin : true,
 app.use(cors({
-  origin : ['http://localhost:3060', 'sudoku.pe.kr'],
+  origin : ['http://localhost:3060', 'http://sudoku.pe.kr','http://13.125.249.212'],
   credentials : true, 
 })); 
 
